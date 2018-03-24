@@ -1,2 +1,30 @@
-<h1>FilesExplorer#index</h1>
-<p>Find me in app/views/files_explorer/index.html.erb</p>
+<div class='search-wrapper'>
+  <form action='/files_explorer' accept-charset='UTF-8' method='get'><input name='utf8' type='hidden' value='✓'>
+    <div class='input-group'>
+      <div class='input-group-prepend'>
+        <span class='input-group-text' id=''>Repository Name</span>
+      </div>
+      <input type='text' name='repo_name' id='repo_name' value='rails/rails' class='form-control' placeholder='Repository name'>
+      <div class='input-group-prepend'>
+        <span class='input-group-text' id=''>Keyword</span>
+      </div>
+      <input type='text' name='keyword' id='keyword' value='CALLBACK' class='form-control' placeholder='Keyword'>
+      <div class='input-group-append'>
+        <input type='submit' name='commit' value='Search' class='btn btn-outline-primary' data-disable-with='Search'>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class='results-wrapper'>
+  <div class='card'>
+    <h6 class='card-header'><a target='_blank' href='#url'>file name</a></h6>
+    <div class='card-body'>
+      <p>something something something...</p>
+      <p class='card-title'>title</p>
+      <p class='card-text'>
+        <span>something something something...</span><span class='highlight'>highlighted words</span><span>something something something...</span>
+      </p>
+    </div>
+  </div>
+</div>
