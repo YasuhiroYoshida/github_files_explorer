@@ -10,12 +10,17 @@
 
   <body data-gr-c-s-loaded='true' class='vsc-initialized' cz-shortcut-listen='true'>
     <nav class='navbar navbar-expand-lg navbar-light bg-light'>
-      <a class='navbar-brand' href='#'>
+      <a class='navbar-brand' href='/'>
         Github Files Explorer
       </a>
     </nav>
 
     <main role='main' class='container'>
+      <div class="flash-container" role='alert'>
+        <% flash.each do |key, value| %>
+          <div class="alert alert-<%= key %>"><%= value %></div>
+        <% end %>
+      </div>
       <%= yield %>
     </main>
   </body>

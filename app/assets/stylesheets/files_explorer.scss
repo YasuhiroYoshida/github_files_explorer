@@ -2,9 +2,14 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 // @import 'bootstrap';
-.search-wrapper {
-  margin: 20px;
+p {
+  white-space: pre-wrap;
 }
-.results-wrapper {
-  margin: 20px;
+
+span.highlighted {
+  background: #FFFF66;
+}
+
+.flash-container {
+  height: 2em;
 }
