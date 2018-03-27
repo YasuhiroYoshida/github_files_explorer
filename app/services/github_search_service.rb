@@ -12,7 +12,7 @@ class GithubSearchService
     @options = {
       query: "q=#{CGI.escape(search_term.strip)}+in:file+repo:#{CGI.escape(repository_name.strip)}",
       headers: { 'Accept': 'application/vnd.github.v3.text-match+json', 'User-Agent': 'YasuhiroYoshida' }
-   }
+    }
   end
 
   def search_code

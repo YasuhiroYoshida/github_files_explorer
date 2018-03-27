@@ -36,7 +36,7 @@ describe GithubSearchService do
       end
     end
 
-    context 'when both multiple search terms and repository names are present' do
+    context 'when both multiple search terms and a repository name are present' do
       let(:options) {
         {
           query: 'q=abc+def+in:file+repo:rails%2Frails+sinatra%2Fsinatra',
@@ -45,7 +45,7 @@ describe GithubSearchService do
       }
 
       it 'should create an instance with all the spaces properly uri-encoded' do
-        gss = GithubSearchService.new('abc def', 'rails/rails sinatra/sinatra')
+        gss = GithubSearchService.new('abc def', 'rails/rails')
 
         expect(gss).to be_a_kind_of(GithubSearchService)
         expect(gss.instance_variable_get(:@options)).to eq options

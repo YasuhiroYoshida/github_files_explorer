@@ -16,9 +16,9 @@
     </nav>
 
     <main role='main' class='container'>
-      <div class="flash-container" role='alert'>
+      <div class='flash-container' role='alert'>
         <% flash.each do |key, value| %>
-          <div class="alert alert-<%= key %>"><%= value %></div>
+          <div class='alert alert-<%= key %>'><%= value %></div>
         <% end %>
       </div>
       <%= yield %>
