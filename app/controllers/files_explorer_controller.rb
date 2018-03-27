@@ -22,10 +22,10 @@ class FilesExplorerController < ApplicationController
           @matched_words.flatten.uniq!
         end
       else
-        flash.now[:warning] = "No matching code was found"
+        flash.now[:warning] = 'No matching code was found'
       end
     else
-      flash.now[:info] = "Enter a search term and repository name"
+      flash.now[:info] = 'Enter a search term and repository name'
     end
 
     respond_with @results = @results.paginate(params[:page], 3)
@@ -39,12 +39,12 @@ class FilesExplorerController < ApplicationController
     end
 
     def search_params_missing
-      flash.now[:danger] = "Enter at least one search term and repository name to get results"
+      flash.now[:danger] = 'Enter at least one search term and repository name to get results'
       respond_with @results
     end
 
     def repo_not_found
-      flash.now[:danger] = "The repository was not found"
+      flash.now[:danger] = 'The repository was not found'
       respond_with @results
     end
 
