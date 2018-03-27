@@ -1,12 +1,12 @@
 class GithubSearchService
-  class SearchTermMissingError < StandardError; end
+  class SearchParamsMissingError < StandardError; end
 
   include HTTParty
 
   base_uri 'https://api.github.com/search/code'
 
   def initialize(search_term, repo)
-    raise SearchTermMissingError unless search_term.present?
+    raise SearchParamsMissingError unless search_term.present? && repo.present?
 
     @options = {
       query: "q=#{CGI.escape(search_term)}+in:file+repo:#{CGI.escape(repo)}",

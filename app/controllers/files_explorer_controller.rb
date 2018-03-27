@@ -1,7 +1,7 @@
 class FilesExplorerController < ApplicationController
   respond_to :html
   before_action :setup, only: [:index]
-  rescue_from GithubSearchService::SearchTermMissingError, with: :search_term_missing
+  rescue_from GithubSearchService::SearchParamsMissingError, with: :search_params_missing
 
   def index
     if params['search_term']&.present?
@@ -37,8 +37,8 @@ class FilesExplorerController < ApplicationController
       @matched_words = []
     end
 
-    def search_term_missing
-      flash.now[:danger] = "Enter at least one search term to get results"
+    def search_params_missing
+      flash.now[:danger] = "Enter at least one search term and repo to get results"
       respond_with @results
     end
 end
