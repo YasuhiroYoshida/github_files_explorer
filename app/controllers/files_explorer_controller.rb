@@ -28,13 +28,13 @@ class FilesExplorerController < ApplicationController
       flash.now[:info] = 'Enter a search term and repository name'
     end
 
-    respond_with @results = @results.paginate(params[:page], 3)
+    respond_with @results = @results.paginate(params[:page], 5)
   end
 
   private
 
     def setup
-      @results = [].paginate(1, 3)
+      @results = [].paginate(1, 5)
       @matched_words = []
     end
 
