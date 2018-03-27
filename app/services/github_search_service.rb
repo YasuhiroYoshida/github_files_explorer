@@ -10,7 +10,7 @@ class GithubSearchService
     raise SearchParamsMissingError unless search_term.present? && repository_name.present?
 
     @options = {
-      query: "q=#{CGI.escape(search_term)}+in:file+repo:#{CGI.escape(repository_name)}",
+      query: "q=#{CGI.escape(search_term.strip)}+in:file+repo:#{CGI.escape(repository_name.strip)}",
       headers: { 'Accept': 'application/vnd.github.v3.text-match+json', 'User-Agent': 'YasuhiroYoshida' }
    }
   end
