@@ -62,15 +62,15 @@ describe GithubSearchService do
     }
     let(:success_msgs) {
       {
-        'total_count': 1, 'incomplete_resuls': false, 'items': ['hashes']
+        'total_count' => 1, 'incomplete_resuls' => false, 'items' => ['a lot of hashes']
       }
     }
     let(:error_msgs) {
       {
-        'message': 'Validation Failed',
-        'errors': [ { 'message': 'Must include at least one user, organization, or repository', 'resource': 'Search', 'field': 'q', 'code': 'invalid' } ],
-        'documentation_url': 'https://developer.github.com/v3/search/'
-      }
+        'message' => 'Validation Failed',
+        'errors' => [ { 'message' => 'Must include at least one user, organization, or repository', 'resource' => 'Search', 'field' => 'q', 'code' => 'invalid' } ],
+        'documentation_url' => 'https://developer.github.com/v3/search/'
+      }.freeze
     }
 
     context 'when it succeeds' do
