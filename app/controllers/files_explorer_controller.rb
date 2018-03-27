@@ -2,6 +2,7 @@ class FilesExplorerController < ApplicationController
   respond_to :html
   before_action :setup, only: [:index]
   rescue_from GithubSearchService::SearchParamsMissingError, with: :search_params_missing
+  rescue_from GithubSearchService::RepoNotFoundError, with: :repo_not_found
 
   def index
     if files_explorer_params['search_term']&.present? && files_explorer_params['repository_name']&.present?
@@ -39,6 +40,11 @@ class FilesExplorerController < ApplicationController
 
     def search_params_missing
       flash.now[:danger] = "Enter at least one search term and repository name to get results"
+      respond_with @results
+    end
+
+    def repo_not_found
+      flash.now[:danger] = "The repository was not found"
       respond_with @results
     end
 

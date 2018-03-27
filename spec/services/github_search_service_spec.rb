@@ -1,4 +1,4 @@
-require "rails_helper"
+require 'rails_helper'
 
 describe GithubSearchService do
   describe '#initialize' do
@@ -27,6 +27,7 @@ describe GithubSearchService do
           headers: { 'Accept': 'application/vnd.github.v3.text-match+json', 'User-Agent': 'YasuhiroYoshida' }
         }
       }
+
       it 'should create an instance' do
         gss = GithubSearchService.new('abc', 'rails/rails')
 
@@ -59,10 +60,31 @@ describe GithubSearchService do
         headers: { 'Accept': 'application/vnd.github.v3.text-match+json', 'User-Agent': 'YasuhiroYoshida' }
       }
     }
+    let(:success_msgs) {
+      {
+        'total_count': 1, 'incomplete_resuls': false, 'items': ['hashes']
+      }
+    }
+    let(:error_msgs) {
+      {
+        'message': 'Validation Failed',
+        'errors': [ { 'message': 'Must include at least one user, organization, or repository', 'resource': 'Search', 'field': 'q', 'code': 'invalid' } ],
+        'documentation_url': 'https://developer.github.com/v3/search/'
+      }
+    }
 
-    it 'should receive a class method call `get`' do
-      allow(GithubSearchService).to receive(:get).with('', options).and_return( { 'total_count': 1, 'incomplete_resuls': false, 'items': [] } )
-      GithubSearchService.new('abc', 'rails/rails').search_code
+    context 'when it succeeds' do
+      it 'should send a method call to a class method `get` and returns success messages' do
+        allow(GithubSearchService).to receive(:get).with('', options).and_return(success_msgs)
+        expect(GithubSearchService.new('abc', 'rails/rails').search_code).to eq success_msgs
+      end
+    end
+
+    context 'when it fails' do
+      it 'should send a method call to a class method `get` and trigger an exception' do
+        allow(GithubSearchService).to receive(:get).with('', options).and_return(error_msgs)
+        expect{ GithubSearchService.new('abc', 'rails/rails').search_code }.to raise_error(GithubSearchService::RepoNotFoundError)
+      end
     end
   end
 end

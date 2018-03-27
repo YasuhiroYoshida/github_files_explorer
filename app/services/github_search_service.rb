@@ -1,5 +1,6 @@
 class GithubSearchService
   class SearchParamsMissingError < StandardError; end
+  class RepoNotFoundError < StandardError; end
 
   include HTTParty
 
@@ -15,6 +16,8 @@ class GithubSearchService
   end
 
   def search_code
-    self.class.get('', @options)
+    results = self.class.get('', @options)
+    results.fetch('total_count') { raise RepoNotFoundError }
+    results
   end
 end
