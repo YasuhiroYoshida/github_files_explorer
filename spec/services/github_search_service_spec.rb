@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe GithubSearchService do
   describe '#initialize' do
-    context 'when both search term and repo are missing' do
+    context 'when both search term and repository name are missing' do
       it 'should trigger exception' do
         expect{ GithubSearchService.new(nil, nil) }.to raise_error(GithubSearchService::SearchParamsMissingError)
       end
@@ -14,13 +14,13 @@ describe GithubSearchService do
       end
     end
 
-    context 'when repo is missing' do
+    context 'when repository name is missing' do
       it 'should trigger exception' do
         expect{ GithubSearchService.new('abc', nil) }.to raise_error(GithubSearchService::SearchParamsMissingError)
       end
     end
 
-    context 'when both search term and repo are present' do
+    context 'when both search term and repository name are present' do
       let(:options) {
         {
           query: 'q=abc+in:file+repo:rails%2Frails',
@@ -35,7 +35,7 @@ describe GithubSearchService do
       end
     end
 
-    context 'when both multiple search terms and repos are present' do
+    context 'when both multiple search terms and repository names are present' do
       let(:options) {
         {
           query: 'q=abc+def+in:file+repo:rails%2Frails+sinatra%2Fsinatra',

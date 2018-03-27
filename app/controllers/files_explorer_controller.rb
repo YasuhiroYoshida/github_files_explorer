@@ -4,8 +4,8 @@ class FilesExplorerController < ApplicationController
   rescue_from GithubSearchService::SearchParamsMissingError, with: :search_params_missing
 
   def index
-    if params['search_term']&.present? && params['repo']&.present?
-      findings = GithubSearchService.new(params['search_term'], params['repo']).search_code
+    if params['search_term']&.present? && params['repository_name']&.present?
+      findings = GithubSearchService.new(params['search_term'], params['repository_name']).search_code
       if findings['total_count'] > 0
         findings['items'].each do |item|
           item['text_matches'].each do |text_match|
@@ -24,7 +24,7 @@ class FilesExplorerController < ApplicationController
         flash.now[:warning] = "No matching code was found"
       end
     else
-      flash.now[:info] = "Enter a search term and repo"
+      flash.now[:info] = "Enter a search term and repository name"
     end
 
     respond_with @results = @results.paginate(params[:page], 3)
@@ -38,7 +38,7 @@ class FilesExplorerController < ApplicationController
     end
 
     def search_params_missing
-      flash.now[:danger] = "Enter at least one search term and repo to get results"
+      flash.now[:danger] = "Enter at least one search term and repository name to get results"
       respond_with @results
     end
 end
