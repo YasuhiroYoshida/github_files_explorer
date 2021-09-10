@@ -1,6 +1,4 @@
 class GithubSearchService
-  class SearchParamsMissingError < StandardError; end
-
   class RepoNotFoundError < StandardError; end
 
   attr_reader :query
@@ -8,10 +6,8 @@ class GithubSearchService
   BASE_URI = "https://api.github.com/search/code".freeze
   HEADERS =  {accept: "application/vnd.github.v3.text-match+json"}.freeze
 
-  def initialize(search_term, repository_name)
-    raise SearchParamsMissingError unless search_term.present? && repository_name.present?
-
-    @query = {q: "#{search_term.strip} in:file repo:#{repository_name.strip}"}
+  def initialize(params)
+    @query = {q: "#{params['search_term']&.strip} in:file repo:#{params['repository_name']&.strip}"}
   end
 
   def search_code
