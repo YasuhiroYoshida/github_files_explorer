@@ -20,8 +20,8 @@ gem "turbolinks", "~> 5"
 
 gem "responders"
 
-gem "will_paginate"
-gem "bootstrap-will_paginate"
+gem "will_paginate", "~> 3.3", ">= 3.3.1"
+gem "bootstrap-will_paginate", "~> 1.0"
 gem "faraday"
 
 group :development, :test do
