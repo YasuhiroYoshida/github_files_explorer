@@ -4,6 +4,8 @@ class GithubSearchService
   attr_reader :query
 
   BASE_URI = "https://api.github.com/search/code".freeze
+  # GitHub recommends using [application/vnd.github.v3.text-match+json]
+  # However, without [text-match], you will not get [text_matches] in the results
   HEADERS =  {accept: "application/vnd.github.v3.text-match+json"}.freeze
 
   def initialize(params)
