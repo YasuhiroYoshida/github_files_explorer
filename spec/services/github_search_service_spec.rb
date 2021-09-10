@@ -1,89 +1,56 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe GithubSearchService do
-  describe '#initialize' do
-    context 'when both search term and repository name are missing' do
-      it 'should trigger exception' do
-        expect{ GithubSearchService.new(nil, nil) }.to raise_error(GithubSearchService::SearchParamsMissingError)
-      end
-    end
+  describe "#initialize" do
+    let(:params) { {"search_term" => "abc def", "repository_name" => "rails/rails"} }
+    let(:query) { {q: "abc def in:file repo:rails/rails"} }
 
-    context 'when search term is missing' do
-      it 'should trigger exception' do
-        expect{ GithubSearchService.new(nil, 'rails/rails') }.to raise_error(GithubSearchService::SearchParamsMissingError)
-      end
-    end
+    it "should create an instance" do
+      gss = GithubSearchService.new(params)
 
-    context 'when repository name is missing' do
-      it 'should trigger exception' do
-        expect{ GithubSearchService.new('abc', nil) }.to raise_error(GithubSearchService::SearchParamsMissingError)
-      end
-    end
-
-    context 'when both search term and repository name are present' do
-      let(:options) {
-        {
-          query: 'q=abc+in:file+repo:rails%2Frails',
-          headers: { 'Accept': 'application/vnd.github.v3.text-match+json', 'User-Agent': 'YasuhiroYoshida' }
-        }
-      }
-
-      it 'should create an instance' do
-        gss = GithubSearchService.new('abc', 'rails/rails')
-
-        expect(gss).to be_a_kind_of(GithubSearchService)
-        expect(gss.instance_variable_get(:@options)).to eq options
-      end
-    end
-
-    context 'when both multiple search terms and a repository name are present' do
-      let(:options) {
-        {
-          query: 'q=abc+def+in:file+repo:rails%2Frails+sinatra%2Fsinatra',
-          headers: { 'Accept': 'application/vnd.github.v3.text-match+json', 'User-Agent': 'YasuhiroYoshida' }
-        }
-      }
-
-      it 'should create an instance with all the spaces properly uri-encoded' do
-        gss = GithubSearchService.new('abc def', 'rails/rails')
-
-        expect(gss).to be_a_kind_of(GithubSearchService)
-        expect(gss.instance_variable_get(:@options)).to eq options
-      end
+      expect(gss).to be_a_kind_of(GithubSearchService)
+      expect(gss.query).to eq query
     end
   end
 
-  describe '#search_code' do
-    let(:options) {
-      {
-        query: 'q=abc+in:file+repo:rails%2Frails',
-        headers: { 'Accept': 'application/vnd.github.v3.text-match+json', 'User-Agent': 'YasuhiroYoshida' }
-      }
-    }
-    let(:success_msgs) {
-      {
-        'total_count' => 1, 'incomplete_resuls' => false, 'items' => ['a lot of hashes']
-      }
-    }
-    let(:error_msgs) {
-      {
-        'message' => 'Validation Failed',
-        'errors' => [ { 'message' => 'Must include at least one user, organization, or repository', 'resource' => 'Search', 'field' => 'q', 'code' => 'invalid' } ],
-        'documentation_url' => 'https://developer.github.com/v3/search/'
-      }.freeze
-    }
+  describe "#search_code" do
+    context "when it succeeds" do
+      let(:params) { {"search_term" => "abc", "repository_name" => "rails/rails"} }
+      let(:query) { {q: "abc in:file repo:rails/rails"} }
+      let(:success_msgs) { {"total_count" => 1, "incomplete_resuls" => false, "items" => ["a lot of hashes"]} }
+      let(:response) { double(Faraday::Response, status: 200, body: success_msgs.to_json, success?: true) }
+      before do
+        allow(Faraday).to receive(:get).with(GithubSearchService::BASE_URI, query,
+                                             GithubSearchService::HEADERS).and_return(response)
+      end
 
-    context 'when it succeeds' do
-      it 'should send a method call to a class method `get` and returns success messages' do
-        allow(GithubSearchService).to receive(:get).with('', options).and_return(success_msgs)
-        expect(GithubSearchService.new('abc', 'rails/rails').search_code).to eq success_msgs
+      it "should send a method call to a class method `get` and returns success messages" do
+        results = GithubSearchService.new(params).search_code
+        expect(results).to eq success_msgs
       end
     end
 
-    context 'when it fails' do
-      it 'should send a method call to a class method `get` and trigger an exception' do
-        allow(GithubSearchService).to receive(:get).with('', options).and_return(error_msgs)
-        expect{ GithubSearchService.new('abc', 'rails/rails').search_code }.to raise_error(GithubSearchService::RepoNotFoundError)
+    context "when it fails" do
+      let(:params) { {"search_term" => "no matches will be returned", "repository_name" => "rails/rails"} }
+      let(:query) { {q: "no matches will be returned in:file repo:rails/rails"} }
+      let(:error_msgs) do
+        {
+          "message" => "Validation Failed",
+          "errors" => [{"message" => "Must include at least one user, organization, or repository", "resource" => "Search",
+                        "field" => "q", "code" => "invalid"}],
+          "documentation_url" => "https://developer.github.com/v3/search/"
+        }
+      end
+      let(:response) { double(Faraday::Response, status: 200, body: error_msgs.to_json, success?: true) }
+      before do
+        allow(Faraday).to receive(:get).with(GithubSearchService::BASE_URI, query,
+                                             GithubSearchService::HEADERS).and_return(response)
+      end
+
+      it "should send a method call to a class method `get` and trigger an exception" do
+        expect do
+          GithubSearchService.new(params).search_code
+        end.to raise_error(GithubSearchService::RepoNotFoundError)
       end
     end
   end
