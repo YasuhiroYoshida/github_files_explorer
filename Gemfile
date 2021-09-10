@@ -9,7 +9,7 @@ end
 
 gem "rails", "~> 6.1.4"
 
-gem "puma", "~> 3.7"
+gem "puma", "~> 5.4"
 
 gem "jquery-rails"
 gem "sass-rails", "~> 5.0"
