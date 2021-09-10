@@ -42,7 +42,8 @@ class FilesExplorerController < ApplicationController
   end
 
   private def valid_params_present
-    if params["commit"] && (files_explorer_params["search_term"]&.blank? || files_explorer_params["repository_name"]&.blank?)
+    return unless params["commit"]
+    unless files_explorer_params["search_term"]&.present? && files_explorer_params["repository_name"]&.present?
       raise SearchParamsMissingError
     end
 
