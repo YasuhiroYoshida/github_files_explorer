@@ -33,7 +33,7 @@ class FilesExplorerController < ApplicationController
         @matched_words << text_match["matches"].map(&:first).map(&:second)
       end
     end
-    @matched_words.flatten!.uniq!
+    @matched_words = @matched_words.flat_map.uniq
   end
 
   private def setup
